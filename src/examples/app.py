@@ -58,6 +58,14 @@ class FlickrApp(appier.WebApp):
         sets = api.list_sets()
         return sets
 
+    @appier.route("/sets/<str:id>/photos", "GET")
+    def photos_set(self, id):
+        url = self.ensure_api()
+        if url: return self.redirect(url)
+        api = self.get_api()
+        photos = api.photos_set(id)
+        return photos
+
     @appier.route("/oauth", "GET")
     def oauth(self):
         oauth_verifier = self.field("oauth_verifier")

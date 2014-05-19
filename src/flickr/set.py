@@ -46,3 +46,14 @@ class SetApi(object):
             method = "flickr.photosets.getList"
         )
         return contents
+
+    def photos_set(self, id, page = 1, per_page = 50):
+        url = self.base_url + "rest"
+        contents = self.get(
+            url,
+            method = "flickr.photosets.getPhotos",
+            photoset_id = id,
+            page = page,
+            per_page = per_page
+        )
+        return contents
