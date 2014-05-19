@@ -44,7 +44,7 @@ from examples import base
 class FlickrApp(appier.WebApp):
 
     def __init__(self):
-        appier.WebApp.__init__(self, name = "twitter")
+        appier.WebApp.__init__(self, name = "flickr")
 
     @appier.route("/", "GET")
     def index(self):
@@ -58,55 +58,38 @@ class FlickrApp(appier.WebApp):
         account = api.verify_account()
         return account
 
-    @appier.route("/streaming", "GET")
-    def streaming(self):
-        url = self.ensure_api()
-        if url: return self.redirect(url)
-        api = self.get_api()
-        streaming = api.user_streaming()
-        return streaming
-
-    @appier.route("/search", "GET")
-    def search(self):
-        url = self.ensure_api()
-        if url: return self.redirect(url)
-        query = self.field("query", "Hive")
-        api = self.get_api()
-        results = api.tweets_search(query)
-        return results
-
     @appier.route("/oauth", "GET")
     def oauth(self):
         oauth_verifier = self.field("oauth_verifier")
         api = self.get_api()
         oauth_token, oauth_token_secret = api.oauth_access(oauth_verifier)
-        self.session["tw.oauth_token"] = oauth_token
-        self.session["tw.oauth_token_secret"] = oauth_token_secret
+        self.session["fk.oauth_token"] = oauth_token
+        self.session["fk.oauth_token_secret"] = oauth_token_secret
         return self.redirect(
-            self.url_for("twitter.index")
+            self.url_for("flickr.index")
         )
 
     @appier.exception_handler(appier.OAuthAccessError)
     def oauth_error(self, error):
-        if "tw.oauth_token" in self.session: del self.session["tw.oauth_token"]
-        if "tw.oauth_token_secret" in self.session: del self.session["tw.oauth_token_secret"]
+        if "fk.oauth_token" in self.session: del self.session["fk.oauth_token"]
+        if "fk.oauth_token_secret" in self.session: del self.session["fk.oauth_token_secret"]
         return self.redirect(
-            self.url_for("twitter.index")
+            self.url_for("flickr.index")
         )
 
     def ensure_api(self):
-        oauth_token = self.session.get("tw.oauth_token", None)
-        oauth_token_secret = self.session.get("tw.oauth_token_secret", None)
+        oauth_token = self.session.get("fk.oauth_token", None)
+        oauth_token_secret = self.session.get("fk.oauth_token_secret", None)
         if oauth_token and oauth_token_secret: return
         api = base.get_api()
         url = api.oauth_authorize()
-        self.session["tw.oauth_token"] = api.oauth_token
-        self.session["tw.oauth_token_secret"] = api.oauth_token_secret
+        self.session["fk.oauth_token"] = api.oauth_token
+        self.session["fk.oauth_token_secret"] = api.oauth_token_secret
         return url
 
     def get_api(self):
-        oauth_token = self.session and self.session.get("tw.oauth_token", None)
-        oauth_token_secret = self.session and self.session.get("tw.oauth_token_secret", None)
+        oauth_token = self.session and self.session.get("fk.oauth_token", None)
+        oauth_token_secret = self.session and self.session.get("fk.oauth_token_secret", None)
         api = base.get_api()
         api.oauth_token = oauth_token
         api.oauth_token_secret = oauth_token_secret
