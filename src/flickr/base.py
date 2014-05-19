@@ -39,6 +39,8 @@ __license__ = "GNU General Public License (GPL), Version 3"
 
 import appier
 
+from flickr import set
+
 BASE_URL = "https://www.flickr.com/services/"
 """ The default base url to be used when no other
 base url value is provided to the constructor """
@@ -56,7 +58,8 @@ REDIRECT_URL = "http://localhost:8080/oauth"
 in case none is provided to the api (client) """
 
 class Api(
-    appier.OAuth1Api
+    appier.OAuth1Api,
+    set.SetApi
 ):
 
     def __init__(self, *args, **kwargs):
@@ -70,7 +73,8 @@ class Api(
 
     def build(self, method, url, headers, kwargs):
         appier.OAuth1Api.build(self, method, url, headers, kwargs)
-        kwargs["json"] = True
+        format = kwargs.get("format", "json")
+        kwargs["format"] = format
 
     def oauth_request(self):
         url = self.base_url + "oauth/request_token"
