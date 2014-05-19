@@ -37,6 +37,8 @@ __copyright__ = "Copyright (c) 2008-2014 Hive Solutions Lda."
 __license__ = "GNU General Public License (GPL), Version 3"
 """ The license for the module """
 
+import json
+
 import appier
 
 from flickr import set
@@ -71,8 +73,17 @@ class Api(
         self.oauth_token = kwargs.get("oauth_token", None)
         self.oauth_token_secret = kwargs.get("oauth_token_secret", None)
 
+    def request(self, method, *args, **kwargs):
+        try: result = method(*args, **kwargs)
+        except appier.HTTPError as exception:
+            self.handle_error(exception)
+        try: result = json.loads(result[14:-1])
+        except ValueError: pass
+        return result
+
     def build(self, method, url, headers, kwargs):
         appier.OAuth1Api.build(self, method, url, headers, kwargs)
+        if not method == "GET": return
         format = kwargs.get("format", "json")
         kwargs["format"] = format
 
