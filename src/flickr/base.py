@@ -68,6 +68,10 @@ class Api(
         self.oauth_token = kwargs.get("oauth_token", None)
         self.oauth_token_secret = kwargs.get("oauth_token_secret", None)
 
+    def build(self, method, url, headers, kwargs):
+        appier.OAuth1Api.build(self, method, url, headers, kwargs)
+        kwargs["json"] = True
+
     def oauth_request(self):
         url = self.base_url + "oauth/request_token"
         contents = self.post(url, oauth_callback = self.redirect_url)
