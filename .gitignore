@@ -4,4 +4,4 @@
 session.shelve*
 
 /dist/
-/src/flickr_api.egg-info/
+/src/flickr_api_python.egg-info/
