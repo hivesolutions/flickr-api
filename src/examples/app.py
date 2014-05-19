@@ -48,15 +48,15 @@ class FlickrApp(appier.WebApp):
 
     @appier.route("/", "GET")
     def index(self):
-        return self.me()
+        return self.sets()
 
-    @appier.route("/me", "GET")
-    def me(self):
+    @appier.route("/sets", "GET")
+    def sets(self):
         url = self.ensure_api()
         if url: return self.redirect(url)
         api = self.get_api()
-        account = api.verify_account()
-        return account
+        sets = api.list_sets()
+        return sets
 
     @appier.route("/oauth", "GET")
     def oauth(self):
