@@ -108,16 +108,18 @@ class Api(
         )
         return result
 
-    def oauth_request(self):
+    def oauth_request(self, state = None):
         url = self.base_url + "oauth/request_token"
-        contents = self.post(url, oauth_callback = self.redirect_url)
+        redirect_url = self.redirect_url
+        if state: redirect_url += "?state=%s" % appier.quote(state, safe = "~")
+        contents = self.post(url, oauth_callback = redirect_url)
         contents = contents.decode("utf-8")
         contents = appier.parse_qs(contents)
         self.oauth_token = contents["oauth_token"][0]
         self.oauth_token_secret = contents["oauth_token_secret"][0]
 
     def oauth_authorize(self, state = None):
-        self.oauth_request()
+        self.oauth_request(state = state)
         url = self.base_url + "oauth/authorize"
         values = dict(
             oauth_token = self.oauth_token
