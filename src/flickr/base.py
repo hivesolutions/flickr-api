@@ -63,6 +63,17 @@ class Api(
     appier.OAuth1Api,
     set.SetApi
 ):
+    """
+    Implementation of the basic Flickr API according to the
+    definition in the website. The authentication mechanisms
+    used is OAuth1.0a and the underlying serialization process
+    is JSON (for simplicity reasons).
+
+    Some of the implementation details required some hacks in
+    order to overcome some of the limitations in the API.
+
+    @see: https://www.flickr.com/services/api
+    """
 
     def __init__(self, *args, **kwargs):
         appier.OAuth1Api.__init__(self, *args, **kwargs)
