@@ -78,22 +78,24 @@ class Api(
         except appier.HTTPError as exception:
             self.handle_error(exception)
         else:
-            is_bytes = appier.is_bytes(result)
-            if is_bytes: result = result.decode("utf-8")
-            try: result = json.loads(result[14:-1])
-            except ValueError: pass
-            is_map = type(result) == dict
-            is_fail = is_map and result.get("stat", None) == "fail"
-            if is_fail: raise appier.OAuthAccessError(
-                message = "Problem in flickr api message"
-            )
-            return result
+            try: return self.try_json(result)
+            except ValueError: return result
 
     def build(self, method, url, headers, kwargs):
         appier.OAuth1Api.build(self, method, url, headers, kwargs)
         if not method == "GET": return
         format = kwargs.get("format", "json")
         kwargs["format"] = format
+
+    def try_json(self, result):
+        is_bytes = appier.is_bytes(result)
+        if is_bytes: result = result.decode("utf-8")
+        result = json.loads(result[14:-1])
+        is_fail = result.get("stat", None) == "fail"
+        if is_fail: raise appier.OAuthAccessError(
+            message = result.get("message", "Problem in flickr api message")
+        )
+        return result
 
     def oauth_request(self):
         url = self.base_url + "oauth/request_token"
