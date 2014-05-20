@@ -82,6 +82,11 @@ class Api(
             if is_bytes: result = result.decode("utf-8")
             try: result = json.loads(result[14:-1])
             except ValueError: pass
+            is_map = type(result) == dict
+            is_fail = is_map and result.get("stat", None) == "fail"
+            if is_fail: raise appier.OAuthAccessError(
+                message = "Problem in flickr api message"
+            )
             return result
 
     def build(self, method, url, headers, kwargs):
