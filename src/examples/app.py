@@ -73,6 +73,7 @@ class FlickrApp(appier.WebApp):
         oauth_token, oauth_token_secret = api.oauth_access(oauth_verifier)
         self.session["fk.oauth_token"] = oauth_token
         self.session["fk.oauth_token_secret"] = oauth_token_secret
+        self.session["fk.oauth_temporary"] = False
         return self.redirect(
             self.url_for("flickr.index")
         )
@@ -81,6 +82,7 @@ class FlickrApp(appier.WebApp):
     def oauth_error(self, error):
         if "fk.oauth_token" in self.session: del self.session["fk.oauth_token"]
         if "fk.oauth_token_secret" in self.session: del self.session["fk.oauth_token_secret"]
+        if "fk.oauth_temporary" in self.session: del self.session["fk.oauth_temporary"]
         return self.redirect(
             self.url_for("flickr.index")
         )
@@ -88,11 +90,14 @@ class FlickrApp(appier.WebApp):
     def ensure_api(self):
         oauth_token = self.session.get("fk.oauth_token", None)
         oauth_token_secret = self.session.get("fk.oauth_token_secret", None)
+        oauth_temporary = self.session.get("fk.oauth_temporary", True)
+        if not oauth_temporary: return
         if oauth_token and oauth_token_secret: return
         api = base.get_api()
         url = api.oauth_authorize()
         self.session["fk.oauth_token"] = api.oauth_token
         self.session["fk.oauth_token_secret"] = api.oauth_token_secret
+        self.session["fk.oauth_temporary"] = True
         return url
 
     def get_api(self):
