@@ -65,7 +65,7 @@ class Api(
 ):
     """
     Implementation of the basic Flickr API according to the
-    definition in the website. The authentication mechanisms
+    definition in the website. The authentication mechanism
     used is OAuth1.0a and the underlying serialization process
     is JSON (for simplicity reasons).
 
