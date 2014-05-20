@@ -91,8 +91,7 @@ class FlickrApp(appier.WebApp):
         oauth_token = self.session.get("fk.oauth_token", None)
         oauth_token_secret = self.session.get("fk.oauth_token_secret", None)
         oauth_temporary = self.session.get("fk.oauth_temporary", True)
-        if not oauth_temporary: return
-        if oauth_token and oauth_token_secret: return
+        if not oauth_temporary and oauth_token and oauth_token_secret: return
         api = base.get_api()
         url = api.oauth_authorize()
         self.session["fk.oauth_token"] = api.oauth_token
