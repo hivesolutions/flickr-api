@@ -77,9 +77,12 @@ class Api(
         try: result = method(*args, **kwargs)
         except appier.HTTPError as exception:
             self.handle_error(exception)
-        try: result = json.loads(result[14:-1])
-        except ValueError: pass
-        return result
+        else:
+            is_bytes = appier.is_bytes(result)
+            if is_bytes: result = result.decode("utf-8")
+            try: result = json.loads(result[14:-1])
+            except ValueError: pass
+            return result
 
     def build(self, method, url, headers, kwargs):
         appier.OAuth1Api.build(self, method, url, headers, kwargs)
