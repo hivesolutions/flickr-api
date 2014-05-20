@@ -71,18 +71,14 @@ class FlickrApp(appier.WebApp):
         oauth_verifier = self.field("oauth_verifier")
         api = self.get_api()
         oauth_token, oauth_token_secret = api.oauth_access(oauth_verifier)
-        self.session["fk.oauth_token"] = oauth_token
-        self.session["fk.oauth_token_secret"] = oauth_token_secret
-        self.session["fk.oauth_temporary"] = False
+        self.tokens(oauth_token, oauth_token_secret, temporary = False)
         return self.redirect(
             self.url_for("flickr.index")
         )
 
     @appier.exception_handler(appier.OAuthAccessError)
     def oauth_error(self, error):
-        if "fk.oauth_token" in self.session: del self.session["fk.oauth_token"]
-        if "fk.oauth_token_secret" in self.session: del self.session["fk.oauth_token_secret"]
-        if "fk.oauth_temporary" in self.session: del self.session["fk.oauth_temporary"]
+        self.delete()
         return self.redirect(
             self.url_for("flickr.index")
         )
@@ -92,11 +88,10 @@ class FlickrApp(appier.WebApp):
         oauth_token_secret = self.session.get("fk.oauth_token_secret", None)
         oauth_temporary = self.session.get("fk.oauth_temporary", True)
         if not oauth_temporary and oauth_token and oauth_token_secret: return
+        self.invalidate()
         api = base.get_api()
         url = api.oauth_authorize()
-        self.session["fk.oauth_token"] = api.oauth_token
-        self.session["fk.oauth_token_secret"] = api.oauth_token_secret
-        self.session["fk.oauth_temporary"] = True
+        self.tokens(api.oauth_token, api.oauth_token_secret, temporary = True)
         return url
 
     def get_api(self):
@@ -106,6 +101,19 @@ class FlickrApp(appier.WebApp):
         api.oauth_token = oauth_token
         api.oauth_token_secret = oauth_token_secret
         return api
+
+    def tokens(self, oauth_token, oauth_token_secret, temporary = True):
+        self.session["fk.oauth_token"] = oauth_token
+        self.session["fk.oauth_token_secret"] = oauth_token_secret
+        self.session["fk.oauth_temporary"] = temporary
+
+    def invalidate(self):
+        self.tokens(None, None, temporary = True)
+
+    def delete(self):
+        if "fk.oauth_token" in self.session: del self.session["fk.oauth_token"]
+        if "fk.oauth_token_secret" in self.session: del self.session["fk.oauth_token_secret"]
+        if "fk.oauth_temporary" in self.session: del self.session["fk.oauth_temporary"]
 
 if __name__ == "__main__":
     app = FlickrApp()
