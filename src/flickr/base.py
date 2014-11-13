@@ -41,7 +41,7 @@ import json
 
 import appier
 
-from flickr import set
+from . import set
 
 BASE_URL = "https://www.flickr.com/services/"
 """ The default base url to be used when no other
