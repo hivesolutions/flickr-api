@@ -37,5 +37,5 @@ __license__ = "GNU General Public License (GPL), Version 3"
 from . import base
 from . import set
 
-from .base import Api
+from .base import BASE_URL, Api
 from .set import SetApi
