@@ -77,10 +77,13 @@ class Api(
 
     def __init__(self, *args, **kwargs):
         appier.OAuth1Api.__init__(self, *args, **kwargs)
+        self.client_key = appier.conf("FLICKR_KEY", CLIENT_KEY)
+        self.client_secret = appier.conf("FLICKR_SECRET", CLIENT_SECRET)
+        self.redirect_url = appier.conf("FLICKR_REDIRECT_URL", REDIRECT_URL)
         self.base_url = kwargs.get("base_url", BASE_URL)
-        self.client_key = kwargs.get("client_key", CLIENT_KEY)
-        self.client_secret = kwargs.get("client_secret", CLIENT_SECRET)
-        self.redirect_url = kwargs.get("redirect_url", REDIRECT_URL)
+        self.client_key = kwargs.get("client_key", self.client_key)
+        self.client_secret = kwargs.get("client_secret", self.client_secret)
+        self.redirect_url = kwargs.get("redirect_url", self.redirect_url)
         self.oauth_token = kwargs.get("oauth_token", None)
         self.oauth_token_secret = kwargs.get("oauth_token_secret", None)
 
