@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Flickr API
-# Copyright (C) 2008-2015 Hive Solutions Lda.
+# Copyright (c) 2008-2015 Hive Solutions Lda.
 #
 # This file is part of Hive Flickr API.
 #
