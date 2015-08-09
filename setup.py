@@ -45,7 +45,7 @@ setuptools.setup(
     version = "0.1.0",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
-    description = "Flickr API",
+    description = "Flickr API Client",
     license = "GNU General Public License (GPL), Version 3",
     keywords = "flickr api",
     url = "http://flickr_api.hive.pt",
