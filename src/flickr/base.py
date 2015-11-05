@@ -95,7 +95,18 @@ class Api(
             try: return self.try_json(result)
             except ValueError: return result
 
-    def build(self, method, url, headers, kwargs):
+    def build(
+        self,
+        method,
+        url,
+        data = None,
+        data_j = None,
+        data_m = None,
+        headers = None,
+        params = None,
+        mime = None,
+        kwargs = None
+    ):
         appier.OAuth1Api.build(self, method, url, headers, kwargs)
         if not method == "GET": return
         format = kwargs.get("format", "json")
