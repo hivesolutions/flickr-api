@@ -43,8 +43,12 @@ from . import base
 
 class FlickrApp(appier.WebApp):
 
-    def __init__(self):
-        appier.WebApp.__init__(self, name = "flickr")
+    def __init__(self, *args, **kwargs):
+        appier.WebApp.__init__(
+            self,
+            name = "flickr",
+            *args, **kwargs
+        )
 
     @appier.route("/", "GET")
     def index(self):
