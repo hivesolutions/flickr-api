@@ -122,3 +122,5 @@ class FlickrApp(appier.WebApp):
 if __name__ == "__main__":
     app = FlickrApp()
     app.serve()
+else:
+    __path__ = []
