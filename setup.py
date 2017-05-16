@@ -48,7 +48,7 @@ setuptools.setup(
     description = "Flickr API Client",
     license = "Apache License, Version 2.0",
     keywords = "flickr api",
-    url = "http://flickr_api.hive.pt",
+    url = "http://flickr-api.hive.pt",
     zip_safe = False,
     packages = [
         "flickr"
