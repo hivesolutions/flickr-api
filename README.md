@@ -1,3 +1,3 @@
-# [Flickr API](http://flickr_api.hive.pt)
+# [Flickr API](http://flickr-api.hive.pt)
 
 Python based implementation Flickr API.
