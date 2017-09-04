@@ -72,7 +72,7 @@ class Api(
     Some of the implementation details required some hacks in
     order to overcome some of the limitations in the API.
 
-    @see: https://www.flickr.com/services/api
+    :see: https://www.flickr.com/services/api
     """
 
     def __init__(self, *args, **kwargs):
