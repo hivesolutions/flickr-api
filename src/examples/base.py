@@ -42,7 +42,7 @@ import appier
 import flickr
 
 def get_api():
-    return flickr.Api(
+    return flickr.API(
         client_key = appier.conf("FLICKR_KEY"),
         client_secret = appier.conf("FLICKR_SECRET"),
         redirect_url = appier.conf("FLICKR_REDIRECT_URL")

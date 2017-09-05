@@ -59,9 +59,9 @@ REDIRECT_URL = "http://localhost:8080/oauth"
 """ The redirect url used as default (fallback) value
 in case none is provided to the api (client) """
 
-class Api(
-    appier.OAuth1Api,
-    set.SetApi
+class API(
+    appier.OAuth1API,
+    set.SetAPI
 ):
     """
     Implementation of the basic Flickr API according to the
@@ -76,7 +76,7 @@ class Api(
     """
 
     def __init__(self, *args, **kwargs):
-        appier.OAuth1Api.__init__(self, *args, **kwargs)
+        appier.OAuth1API.__init__(self, *args, **kwargs)
         self.client_key = appier.conf("FLICKR_KEY", CLIENT_KEY)
         self.client_secret = appier.conf("FLICKR_SECRET", CLIENT_SECRET)
         self.redirect_url = appier.conf("FLICKR_REDIRECT_URL", REDIRECT_URL)
@@ -107,7 +107,7 @@ class Api(
         mime = None,
         kwargs = None
     ):
-        appier.OAuth1Api.build(self, method, url, headers, kwargs)
+        appier.OAuth1API.build(self, method, url, headers, kwargs)
         if not method == "GET": return
         format = kwargs.get("format", "json")
         kwargs["format"] = format
