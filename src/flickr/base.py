@@ -44,8 +44,8 @@ import appier
 from . import set
 
 BASE_URL = "https://www.flickr.com/services/"
-""" The default base url to be used when no other
-base url value is provided to the constructor """
+""" The default base URL to be used when no other
+base URL value is provided to the constructor """
 
 CLIENT_KEY = None
 """ The default value to be used for the client key
