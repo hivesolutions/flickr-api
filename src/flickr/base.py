@@ -118,7 +118,7 @@ class API(
         result = json.loads(result[14:-1])
         is_fail = result.get("stat", None) == "fail"
         if is_fail: raise appier.OAuthAccessError(
-            message = result.get("message", "Problem in flickr API message")
+            message = result.get("message", "Problem in Flickr API message")
         )
         return result
 
