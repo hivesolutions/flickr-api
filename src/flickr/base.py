@@ -49,15 +49,15 @@ base URL value is provided to the constructor """
 
 CLIENT_KEY = None
 """ The default value to be used for the client key
-in case no client key is provided to the api client """
+in case no client key is provided to the API client """
 
 CLIENT_SECRET = None
 """ The secret value to be used for situations where
 no client secret has been provided to the client """
 
 REDIRECT_URL = "http://localhost:8080/oauth"
-""" The redirect url used as default (fallback) value
-in case none is provided to the api (client) """
+""" The redirect URL used as default (fallback) value
+in case none is provided to the API (client) """
 
 class API(
     appier.OAuth1API,
@@ -118,7 +118,7 @@ class API(
         result = json.loads(result[14:-1])
         is_fail = result.get("stat", None) == "fail"
         if is_fail: raise appier.OAuthAccessError(
-            message = result.get("message", "Problem in flickr api message")
+            message = result.get("message", "Problem in flickr API message")
         )
         return result
 
