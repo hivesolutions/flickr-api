@@ -41,7 +41,7 @@ import os
 import setuptools
 
 setuptools.setup(
-    name = "flickr_api_python",
+    name = "flickr-api-python",
     version = "0.1.2",
     author = "Hive Solutions Lda.",
     author_email = "development@hive.pt",
