@@ -3,6 +3,8 @@
 
 session.shelve*
 
+/.venv
+
 /dist
 /build
 /src/flickr_api-python.egg-info

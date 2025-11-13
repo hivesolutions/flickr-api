@@ -28,26 +28,10 @@ __copyright__ = "Copyright (c) 2008-2025 Hive Solutions Lda."
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
 
+import unittest
 
-class SetAPI(object):
 
-    def list_sets(self):
-        url = self.base_url + "rest"
-        contents = self.get(url, method="flickr.photosets.getList")
-        return contents["photosets"]["photoset"]
+class BaseTest(unittest.TestCase):
 
-    def get_set(self, id):
-        url = self.base_url + "rest"
-        contents = self.get(url, method="flickr.photosets.getInfo", photoset_id=id)
-        return contents["photoset"]
-
-    def photos_set(self, id, page=1, per_page=50):
-        url = self.base_url + "rest"
-        contents = self.get(
-            url,
-            method="flickr.photosets.getPhotos",
-            photoset_id=id,
-            page=page,
-            per_page=per_page,
-        )
-        return contents["photoset"]
+    def test_basic(self):
+        self.assertEqual(1 + 1, 2)

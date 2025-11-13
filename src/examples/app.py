@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Flickr API
-# Copyright (c) 2008-2020 Hive Solutions Lda.
+# Copyright (c) 2008-2025 Hive Solutions Lda.
 #
 # This file is part of Hive Flickr API.
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2020 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2025 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -41,14 +32,11 @@ import appier
 
 from . import base
 
+
 class FlickrApp(appier.WebApp):
 
     def __init__(self, *args, **kwargs):
-        appier.WebApp.__init__(
-            self,
-            name = "flickr",
-            *args, **kwargs
-        )
+        appier.WebApp.__init__(self, name="flickr", *args, **kwargs)
 
     @appier.route("/", "GET")
     def index(self):
@@ -57,7 +45,8 @@ class FlickrApp(appier.WebApp):
     @appier.route("/sets", "GET")
     def sets(self):
         url = self.ensure_api()
-        if url: return self.redirect(url)
+        if url:
+            return self.redirect(url)
         api = self.get_api()
         sets = api.list_sets()
         return sets
@@ -65,7 +54,8 @@ class FlickrApp(appier.WebApp):
     @appier.route("/sets/<str:id>/photos", "GET")
     def photos_set(self, id):
         url = self.ensure_api()
-        if url: return self.redirect(url)
+        if url:
+            return self.redirect(url)
         api = self.get_api()
         photos = api.photos_set(id)
         return photos
@@ -79,54 +69,57 @@ class FlickrApp(appier.WebApp):
         oauth_verifier = self.field("oauth_verifier")
         appier.verify(
             oauth_verifier,
-            message = "Invalid OAuth response",
-            exception = appier.OperationalError
+            message="Invalid OAuth response",
+            exception=appier.OperationalError,
         )
         api = self.get_api()
         oauth_token, oauth_token_secret = api.oauth_access(oauth_verifier)
-        self.tokens(oauth_token, oauth_token_secret, temporary = False)
-        return self.redirect(
-            self.url_for("flickr.index")
-        )
+        self.tokens(oauth_token, oauth_token_secret, temporary=False)
+        return self.redirect(self.url_for("flickr.index"))
 
     @appier.exception_handler(appier.OAuthAccessError)
     def oauth_error(self, error):
         self.delete()
-        return self.redirect(
-            self.url_for("flickr.index")
-        )
+        return self.redirect(self.url_for("flickr.index"))
 
     def ensure_api(self):
         oauth_token = self.session.get("fk.oauth_token", None)
         oauth_token_secret = self.session.get("fk.oauth_token_secret", None)
         oauth_temporary = self.session.get("fk.oauth_temporary", True)
-        if not oauth_temporary and oauth_token and oauth_token_secret: return
+        if not oauth_temporary and oauth_token and oauth_token_secret:
+            return
         self.invalidate()
         api = base.get_api()
         url = api.oauth_authorize()
-        self.tokens(api.oauth_token, api.oauth_token_secret, temporary = True)
+        self.tokens(api.oauth_token, api.oauth_token_secret, temporary=True)
         return url
 
     def get_api(self):
         oauth_token = self.session and self.session.get("fk.oauth_token", None)
-        oauth_token_secret = self.session and self.session.get("fk.oauth_token_secret", None)
+        oauth_token_secret = self.session and self.session.get(
+            "fk.oauth_token_secret", None
+        )
         api = base.get_api()
         api.oauth_token = oauth_token
         api.oauth_token_secret = oauth_token_secret
         return api
 
-    def tokens(self, oauth_token, oauth_token_secret, temporary = True):
+    def tokens(self, oauth_token, oauth_token_secret, temporary=True):
         self.session["fk.oauth_token"] = oauth_token
         self.session["fk.oauth_token_secret"] = oauth_token_secret
         self.session["fk.oauth_temporary"] = temporary
 
     def invalidate(self):
-        self.tokens(None, None, temporary = True)
+        self.tokens(None, None, temporary=True)
 
     def delete(self):
-        if "fk.oauth_token" in self.session: del self.session["fk.oauth_token"]
-        if "fk.oauth_token_secret" in self.session: del self.session["fk.oauth_token_secret"]
-        if "fk.oauth_temporary" in self.session: del self.session["fk.oauth_temporary"]
+        if "fk.oauth_token" in self.session:
+            del self.session["fk.oauth_token"]
+        if "fk.oauth_token_secret" in self.session:
+            del self.session["fk.oauth_token_secret"]
+        if "fk.oauth_temporary" in self.session:
+            del self.session["fk.oauth_temporary"]
+
 
 if __name__ == "__main__":
     app = FlickrApp()

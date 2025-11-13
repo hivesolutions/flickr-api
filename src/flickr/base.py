@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Hive Flickr API
-# Copyright (c) 2008-2020 Hive Solutions Lda.
+# Copyright (c) 2008-2025 Hive Solutions Lda.
 #
 # This file is part of Hive Flickr API.
 #
@@ -22,16 +22,7 @@
 __author__ = "João Magalhães <joamag@hive.pt>"
 """ The author(s) of the module """
 
-__version__ = "1.0.0"
-""" The version of the module """
-
-__revision__ = "$LastChangedRevision$"
-""" The revision number of the module """
-
-__date__ = "$LastChangedDate$"
-""" The last change date of the module """
-
-__copyright__ = "Copyright (c) 2008-2020 Hive Solutions Lda."
+__copyright__ = "Copyright (c) 2008-2025 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
@@ -59,10 +50,8 @@ REDIRECT_URL = "http://localhost:8080/oauth"
 """ The redirect URL used as default (fallback) value
 in case none is provided to the API (client) """
 
-class API(
-    appier.OAuth1API,
-    set.SetAPI
-):
+
+class API(appier.OAuth1API, set.SetAPI):
     """
     Implementation of the basic Flickr API according to the
     definition in the website. The authentication mechanism
@@ -88,64 +77,70 @@ class API(
         self.oauth_token_secret = kwargs.get("oauth_token_secret", None)
 
     def request(self, method, *args, **kwargs):
-        try: result = method(*args, **kwargs)
+        try:
+            result = method(*args, **kwargs)
         except appier.HTTPError as exception:
             self.handle_error(exception)
         else:
-            try: return self.try_json(result)
-            except ValueError: return result
+            try:
+                return self.try_json(result)
+            except ValueError:
+                return result
 
     def build(
         self,
         method,
         url,
-        data = None,
-        data_j = None,
-        data_m = None,
-        headers = None,
-        params = None,
-        mime = None,
-        kwargs = None
+        data=None,
+        data_j=None,
+        data_m=None,
+        headers=None,
+        params=None,
+        mime=None,
+        kwargs=None,
     ):
         appier.OAuth1API.build(self, method, url, headers, kwargs)
-        if not method == "GET": return
+        if not method == "GET":
+            return
         format = kwargs.get("format", "json")
         kwargs["format"] = format
 
     def try_json(self, result):
         is_bytes = appier.legacy.is_bytes(result)
-        if is_bytes: result = result.decode("utf-8")
+        if is_bytes:
+            result = result.decode("utf-8")
         result = json.loads(result[14:-1])
         is_fail = result.get("stat", None) == "fail"
-        if is_fail: raise appier.OAuthAccessError(
-            message = result.get("message", "Problem in Flickr API message")
-        )
+        if is_fail:
+            raise appier.OAuthAccessError(
+                message=result.get("message", "Problem in Flickr API message")
+            )
         return result
 
-    def oauth_request(self, state = None):
+    def oauth_request(self, state=None):
         url = self.base_url + "oauth/request_token"
         redirect_url = self.redirect_url
-        if state: redirect_url += "?state=%s" % appier.quote(state, safe = "~")
-        contents = self.post(url, oauth_callback = redirect_url)
+        if state:
+            redirect_url += "?state=%s" % appier.quote(state, safe="~")
+        contents = self.post(url, oauth_callback=redirect_url)
         contents = contents.decode("utf-8")
         contents = appier.legacy.parse_qs(contents)
         self.oauth_token = contents["oauth_token"][0]
         self.oauth_token_secret = contents["oauth_token_secret"][0]
 
-    def oauth_authorize(self, state = None):
-        self.oauth_request(state = state)
+    def oauth_authorize(self, state=None):
+        self.oauth_request(state=state)
         url = self.base_url + "oauth/authorize"
-        values = dict(
-            oauth_token = self.oauth_token
-        )
+        values = dict(oauth_token=self.oauth_token)
         data = appier.legacy.urlencode(values)
         url = url + "?" + data
         return url
 
-    def oauth_access(self, oauth_verifier = None):
+    def oauth_access(self, oauth_verifier=None):
         url = self.base_url + "oauth/access_token"
         kwargs = dict()
-        if oauth_verifier: kwargs["oauth_verifier"] = oauth_verifier
+        if oauth_verifier:
+            kwargs["oauth_verifier"] = oauth_verifier
         contents = self.post(url, **kwargs)
         contents = contents.decode("utf-8")
         contents = appier.legacy.parse_qs(contents)

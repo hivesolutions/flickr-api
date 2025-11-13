@@ -19,35 +19,8 @@
 # You should have received a copy of the Apache License along with
 # Hive Flickr API. If not, see <http://www.apache.org/licenses/>.
 
-__author__ = "João Magalhães <joamag@hive.pt>"
-""" The author(s) of the module """
-
 __copyright__ = "Copyright (c) 2008-2025 Hive Solutions Lda."
 """ The copyright for the module """
 
 __license__ = "Apache License, Version 2.0"
 """ The license for the module """
-
-
-class SetAPI(object):
-
-    def list_sets(self):
-        url = self.base_url + "rest"
-        contents = self.get(url, method="flickr.photosets.getList")
-        return contents["photosets"]["photoset"]
-
-    def get_set(self, id):
-        url = self.base_url + "rest"
-        contents = self.get(url, method="flickr.photosets.getInfo", photoset_id=id)
-        return contents["photoset"]
-
-    def photos_set(self, id, page=1, per_page=50):
-        url = self.base_url + "rest"
-        contents = self.get(
-            url,
-            method="flickr.photosets.getPhotos",
-            photoset_id=id,
-            page=page,
-            per_page=per_page,
-        )
-        return contents["photoset"]
