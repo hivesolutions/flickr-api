@@ -42,6 +42,7 @@ setuptools.setup(
     url="http://flickr-api.hive.pt",
     zip_safe=False,
     packages=["flickr"],
+    test_suite="flickr.test",
     package_dir={"": os.path.normpath("src")},
     install_requires=["appier"],
     classifiers=[
